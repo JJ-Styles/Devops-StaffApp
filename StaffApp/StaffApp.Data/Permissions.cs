@@ -1,6 +1,6 @@
 ﻿namespace StaffApp.Data
 {
-    public class Permission
+    public class Permissions
     {
         public int Id { get; set; }
         public bool CanOrder { get; set; }

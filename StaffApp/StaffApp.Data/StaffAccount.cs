@@ -9,5 +9,7 @@ namespace StaffApp.Data
         public int Id { get; set; }
         public string Surname { get; set; }
         public string Forename { get; set; }
+        public int PermissionId { get; set; }
+        public Permissions Permission { get; set; }
     }
 }
