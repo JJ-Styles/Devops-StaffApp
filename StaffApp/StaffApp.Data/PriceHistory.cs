@@ -4,8 +4,8 @@ namespace StaffApp.Data
 {
     public class PriceHistory
     {
-        public int productId { get; set;}
+        public int Id { get; set;}
         public DateTime EffectiveFrom { get; set;}
-        public double price { get; set;}
+        public double Price { get; set;}
     }
 }

@@ -28,10 +28,10 @@ namespace StaffApp.Data
 
             var priceHistories = new List<PriceHistory>
             {
-                new PriceHistory { price = 2.25, EffectiveFrom = DateTime.Now},
-                new PriceHistory { price = 5.00, EffectiveFrom = DateTime.Now},
-                new PriceHistory { price = 5.48, EffectiveFrom = DateTime.Now},
-                new PriceHistory { price = 15.48, EffectiveFrom = DateTime.Now}
+                new PriceHistory { Price = 2.25, EffectiveFrom = DateTime.Now},
+                new PriceHistory { Price = 5.00, EffectiveFrom = DateTime.Now},
+                new PriceHistory { Price = 5.48, EffectiveFrom = DateTime.Now},
+                new PriceHistory { Price = 15.48, EffectiveFrom = DateTime.Now}
             };
             priceHistories.ForEach(p => context.PriceHistories.Add(p));
 
