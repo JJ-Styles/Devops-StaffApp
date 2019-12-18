@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +13,12 @@ namespace StaffApp.Data
         public static async Task SeedTestData(StaffDb context,
                                               IServiceProvider services)
         {
+            if (context.Invoices.Any())
+            {
+                //db seems to be seeded
+                return;
+            }
+
             var permissions = new List<Permissions>
             {
                 new Permissions { CanAlterCustomers = true, CanAlterStaff = false, CanApproveDenyRequest = false, CanDeleteCustomers = true, CanHideReviews = true, CanOrder = false, CanOrderNewStock = true, CanSetResellPrice = true, CanViewCustomers = true, CanViewOrders = true},
@@ -26,35 +35,62 @@ namespace StaffApp.Data
 
             await context.SaveChangesAsync();
 
-            var priceHistories = new List<PriceHistory>
-            {
-                new PriceHistory { Price = 2.25, EffectiveFrom = DateTime.Now},
-                new PriceHistory { Price = 5.00, EffectiveFrom = DateTime.Now},
-                new PriceHistory { Price = 5.48, EffectiveFrom = DateTime.Now},
-                new PriceHistory { Price = 15.48, EffectiveFrom = DateTime.Now}
-            };
-            priceHistories.ForEach(p => context.PriceHistories.Add(p));
-
-            await context.SaveChangesAsync();
-
             var products = new List<Product>
             {
-                new Product { Description = "Poor quality fake faux leather cover loose enough to fit any mobile device.", Name = "Wrap It and Hope Cover", Price = priceHistories, StockLevel = 1 },
-                new Product { Description = "Purchase you favourite chocolate and use the provided heating element to melt it into the perfect cover for your mobile device.", Name = "Chocolate Cover", Price = priceHistories, StockLevel = 0 },
-                new Product { Description = "Lamely adapted used and dirty teatowel.  Guaranteed fewer than two holes.", Name = "Cloth Cover", Price = priceHistories, StockLevel = 6 },
-                new Product { Description = "Especially toughen and harden sponge entirely encases your device to prevent any interaction.", Name = "Harden Sponge Case", Price = priceHistories, StockLevel = 2 },
-                new Product { Description = "Place your device within the water-tight container, fill with water and enjoy the cushioned protection from bumps and bangs.", Name = "Water Bath Case", Price = priceHistories, StockLevel = 3 },
-                new Product { Description = "Keep you smartphone handsfree with this large assembly that attaches to your rear window wiper (Hatchbacks only).", Name = "Smartphone Car Holder", Price = priceHistories, StockLevel = 8 },
-                new Product { Description = "Keep your device on your arm with this general purpose sticky tape.", Name = "Sticky Tape Sport Armband", Price = priceHistories, StockLevel = 23 },
-                new Product { Description = "Stengthen HB pencils guaranteed to leave a mark.", Name = "Real Pencil Stylus", Price = priceHistories, StockLevel = 5 },
-                new Product { Description = "Coat your mobile device screen in a scratch resistant, opaque film.", Name = "Spray Paint Screen Protector", Price = priceHistories, StockLevel = 1 },
-                new Product { Description = "For his or her sensory pleasure. Fits few known smartphones.", Name = "Rippled Screen Protector", Price = priceHistories, StockLevel = 5 },
-                new Product { Description = "For an odour than lingers on your device.", Name = "Fish Scented Screen Protector", Price = priceHistories, StockLevel = 0 },
-                new Product { Description = "Guaranteed not to conduct electical charge from your fingers.", Name = "Non-conductive Screen Protector", Price = priceHistories, StockLevel = 10 }
+                new Product { Description = "Poor quality fake faux leather cover loose enough to fit any mobile device.", Name = "Wrap It and Hope Cover", StockLevel = 1 },
+                new Product { Description = "Purchase you favourite chocolate and use the provided heating element to melt it into the perfect cover for your mobile device.", Name = "Chocolate Cover", StockLevel = 0 },
+                new Product { Description = "Lamely adapted used and dirty teatowel.  Guaranteed fewer than two holes.", Name = "Cloth Cover", StockLevel = 6 },
+                new Product { Description = "Especially toughen and harden sponge entirely encases your device to prevent any interaction.", Name = "Harden Sponge Case", StockLevel = 2 },
+                new Product { Description = "Place your device within the water-tight container, fill with water and enjoy the cushioned protection from bumps and bangs.", Name = "Water Bath Case", StockLevel = 3 },
+                new Product { Description = "Keep you smartphone handsfree with this large assembly that attaches to your rear window wiper (Hatchbacks only).", Name = "Smartphone Car Holder", StockLevel = 8 },
+                new Product { Description = "Keep your device on your arm with this general purpose sticky tape.", Name = "Sticky Tape Sport Armband", StockLevel = 23 },
+                new Product { Description = "Stengthen HB pencils guaranteed to leave a mark.", Name = "Real Pencil Stylus", StockLevel = 5 },
+                new Product { Description = "Coat your mobile device screen in a scratch resistant, opaque film.", Name = "Spray Paint Screen Protector", StockLevel = 1 },
+                new Product { Description = "For his or her sensory pleasure. Fits few known smartphones.", Name = "Rippled Screen Protector", StockLevel = 5 },
+                new Product { Description = "For an odour than lingers on your device.", Name = "Fish Scented Screen Protector", StockLevel = 0 },
+                new Product { Description = "Guaranteed not to conduct electical charge from your fingers.", Name = "Non-conductive Screen Protector", StockLevel = 10 }
             };
             products.ForEach(p => context.Products.Add(p));
 
             await context.SaveChangesAsync();
+
+            var priceHistories = new List<PriceHistory>
+            {
+                new PriceHistory { Price = 2.25, EffectiveFrom = DateTime.Now, product = products[1]},
+                new PriceHistory { Price = 5.00, EffectiveFrom = new DateTime(2019,12,1), product = products[1]},
+                new PriceHistory { Price = 5.48, EffectiveFrom = DateTime.Now, product = products[2]},
+                new PriceHistory { Price = 15.48, EffectiveFrom = new DateTime(2019,8,14), product = products[2]},
+                new PriceHistory { Price = 8.95, EffectiveFrom = DateTime.Now, product = products[3]},
+                new PriceHistory { Price = 10.53, EffectiveFrom = new DateTime(2019,12,1), product = products[3]},
+                new PriceHistory { Price = 15.40, EffectiveFrom = DateTime.Now, product = products[4]},
+                new PriceHistory { Price = 1.95, EffectiveFrom = new DateTime(2019,8,14), product = products[4]},
+                new PriceHistory { Price = 6.84, EffectiveFrom = DateTime.Now, product = products[5]},
+                new PriceHistory { Price = 20.55, EffectiveFrom = new DateTime(2019,12,1), product = products[5]},
+                new PriceHistory { Price = 2.22, EffectiveFrom = DateTime.Now, product = products[6]},
+                new PriceHistory { Price = 3.45, EffectiveFrom = new DateTime(2019,8,14), product = products[6]},
+                new PriceHistory { Price = 40.22, EffectiveFrom = DateTime.Now, product = products[7]},
+                new PriceHistory { Price = 50.00, EffectiveFrom = new DateTime(2019,12,1), product = products[7]},
+                new PriceHistory { Price = 16.95, EffectiveFrom = DateTime.Now, product = products[8]},
+                new PriceHistory { Price = 20.16, EffectiveFrom = new DateTime(2019,8,14), product = products[8]},
+                new PriceHistory { Price = 9.84, EffectiveFrom = DateTime.Now, product = products[9]},
+                new PriceHistory { Price = 8.80, EffectiveFrom = new DateTime(2019,12,1), product = products[9]},
+                new PriceHistory { Price = 7.36, EffectiveFrom = DateTime.Now, product = products[10]},
+                new PriceHistory { Price = 6.09, EffectiveFrom = new DateTime(2019,8,14), product = products[10]},
+                new PriceHistory { Price = 6.36, EffectiveFrom = DateTime.Now, product = products[11]},
+                new PriceHistory { Price = 11.95, EffectiveFrom = new DateTime(2019,12,1), product = products[11]},
+                new PriceHistory { Price = 17.00, EffectiveFrom = DateTime.Now, product = products[0]},
+                new PriceHistory { Price = 18.41, EffectiveFrom = new DateTime(2019,8,14), product = products[0]},
+            };
+            priceHistories.ForEach(p => context.PriceHistories.Add(p));
+
+            try { 
+                await context.SaveChangesAsync(); 
+            }
+            catch (Exception e)
+            {
+                var logger = services.GetRequiredService<ILogger<StaffDbInitialiser>>();
+                logger.LogDebug(e.ToString());
+            }   
 
             var productRequests = new List<ProductRequest>
             {

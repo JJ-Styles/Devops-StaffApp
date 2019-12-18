@@ -49,19 +49,20 @@ namespace StaffApp.Data
                 x.Property(p => p.CanViewOrders).IsRequired();
             });
 
-            modelBuilder.Entity<PriceHistory>(x =>
-            {
-                x.Property(p => p.EffectiveFrom).IsRequired();
-                x.Property(p => p.Price).IsRequired();
-            });
-
             modelBuilder.Entity<Product>(x =>
             {
                 x.Property(p => p.Name).IsRequired();
                 x.Property(p => p.Description).IsRequired();
                 x.Property(p => p.StockLevel).IsRequired();
-                x.HasMany(p => p.Price).WithOne()
-                                      .IsRequired();
+            });
+
+            modelBuilder.Entity<PriceHistory>(x =>
+            {
+                x.Property(p => p.EffectiveFrom).IsRequired();
+                x.Property(p => p.Price).IsRequired();
+                x.HasOne(p => p.product).WithMany()
+                                        .HasForeignKey(p => p.ProductId)
+                                        .IsRequired();
             });
 
             modelBuilder.Entity<ProductRequest>(x =>
