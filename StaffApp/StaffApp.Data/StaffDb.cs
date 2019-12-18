@@ -29,12 +29,6 @@ namespace StaffApp.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Invoice>(x =>
-            {
-                x.Property(i => i.AccountId).IsRequired();
-                x.Property(i => i.Invoiced).IsRequired();
-            });
-
             modelBuilder.Entity<Permissions>(x =>
             {
                 x.Property(p => p.CanAlterCustomers).IsRequired();
@@ -91,12 +85,25 @@ namespace StaffApp.Data
                                            .IsRequired();
             });
 
+            modelBuilder.Entity<Invoice>(x =>
+            {
+                x.Property(i => i.Invoiced).IsRequired();
+                x.HasOne(i => i.User).WithMany()
+                                     .HasForeignKey(i => i.UserAccountId)
+                                     .IsRequired();
+                x.HasOne(i => i.Staff).WithMany()
+                                      .HasForeignKey(i => i.StaffAccountId)
+                                      .IsRequired();
+            });
             modelBuilder.Entity<Order>(x =>
             {
                 x.Property(o => o.Cost).IsRequired();
                 x.Property(o => o.Quantity).IsRequired();
                 x.HasOne(o => o.Products).WithMany()
                                          .HasForeignKey(o => o.ProductId)
+                                         .IsRequired();
+                x.HasOne(o => o.Invoices).WithMany()
+                                         .HasForeignKey(o => o.InvoiceId)
                                          .IsRequired();
             });
         }

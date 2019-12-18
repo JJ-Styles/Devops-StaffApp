@@ -10,6 +10,8 @@ namespace StaffApp.Data
         public int ProductId { get; set;}
         public int Quantity { get; set;}
         public double Cost { get; set; }
-        public Product Products { get; set; } 
+        public int InvoiceId { get; set; }
+        public Product Products { get; set; }
+        public Invoice Invoices { get; set; }
     }
 }

@@ -139,26 +139,26 @@ namespace StaffApp.Data
 
             await context.SaveChangesAsync();
 
-            var orders = new List<Order>
+            var invoices = new List<Invoice>
             {
-                new Order{ Products = products[0], Cost = 25.00, Quantity = 15},
-                new Order{ Products = products[1], Cost = 15.15, Quantity = 7},
-                new Order{ Products = products[2], Cost = 54.54, Quantity = 50},
-                new Order{ Products = products[3], Cost = 68.46, Quantity = 70},
-                new Order{ Products = products[4], Cost = 94.34, Quantity = 80}
+                new Invoice { Invoiced = false, Staff = staffAccounts[0], User = userAccounts[2]},
+                new Invoice { Invoiced = true, Staff = staffAccounts[1], User = userAccounts[8]},
+                new Invoice { Invoiced = false, Staff = staffAccounts[2], User = userAccounts[1]},
+                new Invoice { Invoiced = true, Staff = staffAccounts[5], User = userAccounts[5]},
             };
-            orders.ForEach(o => context.Orders.Add(o));
+            invoices.ForEach(i => context.Invoices.Add(i));
 
             await context.SaveChangesAsync();
 
-            var invoices = new List<Invoice>
+            var orders = new List<Order>
             {
-                new Invoice { Invoiced = false, Staff = staffAccounts[0]},
-                new Invoice { Invoiced = true, Staff = staffAccounts[1]},
-                new Invoice { Invoiced = false, Staff = staffAccounts[2]},
-                new Invoice { Invoiced = true, Staff = staffAccounts[5]},
+                new Order{ Products = products[0], Cost = 25.00, Quantity = 15, Invoices = invoices[1]},
+                new Order{ Products = products[1], Cost = 15.15, Quantity = 7, Invoices = invoices[3]},
+                new Order{ Products = products[2], Cost = 54.54, Quantity = 50, Invoices = invoices[0]},
+                new Order{ Products = products[3], Cost = 68.46, Quantity = 70, Invoices = invoices[0]},
+                new Order{ Products = products[4], Cost = 94.34, Quantity = 80, Invoices = invoices[2]}
             };
-            invoices.ForEach(i => context.Invoices.Add(i));
+            orders.ForEach(o => context.Orders.Add(o));
 
             await context.SaveChangesAsync();
         }
