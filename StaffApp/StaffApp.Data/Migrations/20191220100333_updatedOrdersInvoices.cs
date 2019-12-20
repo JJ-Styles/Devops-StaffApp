@@ -26,19 +26,19 @@ namespace StaffApp.Data.Migrations
                 name: "InvoiceId",
                 table: "Orders",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 1);
 
             migrationBuilder.AddColumn<int>(
                 name: "StaffAccountId",
                 table: "Invoices",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 1);
 
             migrationBuilder.AddColumn<int>(
                 name: "UserAccountId",
                 table: "Invoices",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 1);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_InvoiceId",
@@ -69,7 +69,7 @@ namespace StaffApp.Data.Migrations
                 column: "UserAccountId",
                 principalTable: "UserAccounts",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.NoAction);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Orders_Invoices_InvoiceId",

@@ -13,7 +13,7 @@ namespace StaffApp.Data
         public static async Task SeedTestData(StaffDb context,
                                               IServiceProvider services)
         {
-            if (context.Invoices.Any())
+            if (context.Orders.Any())
             {
                 //db seems to be seeded
                 return;

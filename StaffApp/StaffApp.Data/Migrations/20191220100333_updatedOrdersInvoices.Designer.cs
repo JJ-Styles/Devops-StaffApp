@@ -10,7 +10,7 @@ using StaffApp.Data;
 namespace StaffApp.Data.Migrations
 {
     [DbContext(typeof(StaffDb))]
-    [Migration("20191218215515_updatedOrdersInvoices")]
+    [Migration("20191220100333_updatedOrdersInvoices")]
     partial class updatedOrdersInvoices
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

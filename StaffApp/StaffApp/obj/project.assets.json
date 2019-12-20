@@ -8252,11 +8252,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\source\\repos\\JJ-Styles\\StaffApp\\StaffApp\\StaffApp\\StaffApp.Web.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Source\\Repos\\JJ-Styles\\StaffApp\\StaffApp\\StaffApp\\StaffApp.Web.csproj",
       "projectName": "StaffApp.Web",
-      "projectPath": "C:\\Users\\User\\source\\repos\\JJ-Styles\\StaffApp\\StaffApp\\StaffApp\\StaffApp.Web.csproj",
+      "projectPath": "C:\\Users\\User\\Source\\Repos\\JJ-Styles\\StaffApp\\StaffApp\\StaffApp\\StaffApp.Web.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\source\\repos\\JJ-Styles\\StaffApp\\StaffApp\\StaffApp\\obj\\",
+      "outputPath": "C:\\Users\\User\\Source\\Repos\\JJ-Styles\\StaffApp\\StaffApp\\StaffApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -8276,8 +8276,8 @@
       "frameworks": {
         "netcoreapp3.0": {
           "projectReferences": {
-            "C:\\Users\\User\\source\\repos\\JJ-Styles\\StaffApp\\StaffApp\\StaffApp.Data\\StaffApp.Data.csproj": {
-              "projectPath": "C:\\Users\\User\\source\\repos\\JJ-Styles\\StaffApp\\StaffApp\\StaffApp.Data\\StaffApp.Data.csproj"
+            "C:\\Users\\User\\Source\\Repos\\JJ-Styles\\StaffApp\\StaffApp\\StaffApp.Data\\StaffApp.Data.csproj": {
+              "projectPath": "C:\\Users\\User\\Source\\Repos\\JJ-Styles\\StaffApp\\StaffApp\\StaffApp.Data\\StaffApp.Data.csproj"
             }
           }
         }

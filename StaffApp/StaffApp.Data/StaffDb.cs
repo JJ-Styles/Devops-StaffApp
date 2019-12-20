@@ -95,6 +95,7 @@ namespace StaffApp.Data
                                       .HasForeignKey(i => i.StaffAccountId)
                                       .IsRequired();
             });
+
             modelBuilder.Entity<Order>(x =>
             {
                 x.Property(o => o.Cost).IsRequired();
