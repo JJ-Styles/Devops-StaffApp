@@ -92,14 +92,14 @@ namespace StaffApp.Data
                                      .HasForeignKey(i => i.UserAccountId)
                                      .IsRequired();
                 x.HasOne(i => i.Staff).WithMany()
-                                      .HasForeignKey(i => i.StaffAccountId)
-                                      .IsRequired();
+                                      .HasForeignKey(i => i.StaffAccountId);
             });
 
             modelBuilder.Entity<Order>(x =>
             {
                 x.Property(o => o.Cost).IsRequired();
                 x.Property(o => o.Quantity).IsRequired();
+                x.Property(o => o.DispatchDate).IsRequired();
                 x.HasOne(o => o.Products).WithMany()
                                          .HasForeignKey(o => o.ProductId)
                                          .IsRequired();

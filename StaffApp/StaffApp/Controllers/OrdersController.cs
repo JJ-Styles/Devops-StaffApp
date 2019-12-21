@@ -116,14 +116,78 @@ namespace StaffApp.Web.Controllers
         // GET: Orders/ViewInvoice/5
         public async Task<IActionResult> ViewInvoice(int? invoiceId)
         {
-            var order = await _context.Orders
+            if (invoiceId == null)
+            {
+                return NotFound();
+            }
+
+            var order = _context.Orders
                 .Include(o => o.Invoices)
                 .Include(o => o.Products)
                 .Include(o => o.Invoices.Staff)
                 .Include(o => o.Invoices.User)
-                .FirstOrDefaultAsync(m => m.InvoiceId == invoiceId);
+                .Where(m => m.InvoiceId == invoiceId);
 
-            return View(order);
+            return View(await order.ToListAsync());
+        }
+
+        // GET: Orders/EditInvoice/5
+        public async Task<IActionResult> EditInvoice(int? invoiceId)
+        {
+            if (invoiceId == null)
+            {
+                return NotFound();
+            }
+
+            var invoice = await _context.Invoices.FirstOrDefaultAsync(i => i.Id == invoiceId);
+
+            return View(invoice);
+        }
+
+        // POST: Orders/EditInvoice/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditInvoice(int id, [Bind("Id, Invoiced, StaffAccountId, UserAccountId")] Invoice invoice)
+        {
+            if (id != invoice.Id)
+            {
+                return NotFound();
+            }
+
+            //need to alter the staff account to whoever invoiced it
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(invoice);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!InvoiceExists(invoice.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            //TODO: send updated invoice to invoice api
+
+
+            return View(invoice);
+        }
+
+        private bool InvoiceExists(int id)
+        {
+            return _context.Invoices.Any(e => e.Id == id);
         }
     }
 }

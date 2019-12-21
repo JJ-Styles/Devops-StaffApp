@@ -1,0 +1,86 @@
+﻿@model IEnumerable<StaffApp.Data.Order>
+
+@{
+    ViewData["Title"] = "ViewInvoice";
+}
+
+<h1>ViewInvoice</h1>
+
+<div>
+    <h4>Invoice</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Invoice Number
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.First().Invoices.Id)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.First().Invoices.Invoiced)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.First().Invoices.Invoiced)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.First().Invoices.User)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.First().Invoices.User.Email)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.First().Invoices.Staff)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.First().Invoices.Staff.Surname)
+            @Html.DisplayFor(model => model.First().Invoices.Staff.Forename)
+        </dd>
+    </dl>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Order Number
+            </th>
+            <th>
+                Product
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Cost)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelitem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem => item.Products.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem => item.Quantity)
+                </td>
+                <td>
+                    £@Html.DisplayFor(modelitem => item.Cost)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="EditInvoice" asp-route-invoiceId="@Model.First().InvoiceId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
