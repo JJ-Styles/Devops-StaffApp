@@ -54,8 +54,11 @@ namespace StaffApp.Data.Migrations
                     b.Property<double>("Cost")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("DispatchDate")
+                    b.Property<DateTime?>("DispatchDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("Dispatched")
+                        .HasColumnType("bit");
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");

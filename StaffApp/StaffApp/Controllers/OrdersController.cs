@@ -25,7 +25,7 @@ namespace StaffApp.Web.Controllers
                                             .ThenInclude(i => i.Staff)
                                          .Include(o => o.Invoices.User)
                                          .Include(o => o.Products);
-            return View(await orders.ToListAsync());
+            return View(await orders.Where(o => o.DispatchDate == null).ToListAsync());
         }
 
         // GET: Orders/Details/5
@@ -41,7 +41,8 @@ namespace StaffApp.Web.Controllers
                 .Include(o => o.Products)
                 .Include(o => o.Invoices.Staff)
                 .Include(o => o.Invoices.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && m.DispatchDate == null);
+
             if (order == null)
             {
                 return NotFound();
@@ -59,7 +60,7 @@ namespace StaffApp.Web.Controllers
             }
 
             var order = await _context.Orders.FindAsync(id);
-            if (order == null)
+            if (order == null || order.DispatchDate != null)
             {
                 return NotFound();
             }
@@ -73,12 +74,19 @@ namespace StaffApp.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,Quantity,Cost,InvoiceId")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,Quantity,Cost,Dispatched,InvoiceId")] Order order)
         {
+            var invoice = await _context.Invoices.FirstOrDefaultAsync(i => i.Id == order.InvoiceId);
             if (id != order.Id)
             {
                 return NotFound();
             }
+            else if (!invoice.Invoiced)
+            {
+                return View("NotInvoiced");
+            }
+
+            order.DispatchDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {

@@ -99,7 +99,8 @@ namespace StaffApp.Data
             {
                 x.Property(o => o.Cost).IsRequired();
                 x.Property(o => o.Quantity).IsRequired();
-                x.Property(o => o.DispatchDate).IsRequired();
+                x.Property(o => o.Dispatched).IsRequired();
+                x.Property(o => o.DispatchDate);
                 x.HasOne(o => o.Products).WithMany()
                                          .HasForeignKey(o => o.ProductId)
                                          .IsRequired();

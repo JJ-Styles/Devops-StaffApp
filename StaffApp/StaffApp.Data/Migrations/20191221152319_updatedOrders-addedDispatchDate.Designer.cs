@@ -10,7 +10,7 @@ using StaffApp.Data;
 namespace StaffApp.Data.Migrations
 {
     [DbContext(typeof(StaffDb))]
-    [Migration("20191221143827_updatedOrders-addedDispatchDate")]
+    [Migration("20191221152319_updatedOrders-addedDispatchDate")]
     partial class updatedOrdersaddedDispatchDate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,8 +56,11 @@ namespace StaffApp.Data.Migrations
                     b.Property<double>("Cost")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("DispatchDate")
+                    b.Property<DateTime?>("DispatchDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("Dispatched")
+                        .HasColumnType("bit");
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");

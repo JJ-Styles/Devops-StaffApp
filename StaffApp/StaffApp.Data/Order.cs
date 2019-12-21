@@ -11,7 +11,8 @@ namespace StaffApp.Data
         public int Quantity { get; set;}
         public double Cost { get; set; }
         public int InvoiceId { get; set; }
-        public DateTime DispatchDate { get; set; }
+        public bool Dispatched { get; set; }
+        public DateTime? DispatchDate { get; set; }
         public Product Products { get; set; }
         public Invoice Invoices { get; set; }
     }
