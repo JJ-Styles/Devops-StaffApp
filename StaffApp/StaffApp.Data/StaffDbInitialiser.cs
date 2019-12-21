@@ -29,7 +29,8 @@ namespace StaffApp.Data
                 new Permissions { CanAlterCustomers = true, CanAlterStaff = false, CanApproveDenyRequest = false, CanDeleteCustomers = true, CanHideReviews = false, CanOrder = false, CanOrderNewStock = true, CanSetResellPrice = true, CanViewCustomers = true, CanViewOrders = true},
                 new Permissions { CanAlterCustomers = true, CanAlterStaff = false, CanApproveDenyRequest = false, CanDeleteCustomers = false, CanHideReviews = true, CanOrder = false, CanOrderNewStock = true, CanSetResellPrice = true, CanViewCustomers = true, CanViewOrders = true},
                 new Permissions { CanAlterCustomers = false, CanAlterStaff = false, CanApproveDenyRequest = false, CanDeleteCustomers = true, CanHideReviews = true, CanOrder = false, CanOrderNewStock = true, CanSetResellPrice = true, CanViewCustomers = true, CanViewOrders = true},
-                new Permissions { CanAlterCustomers = false, CanAlterStaff = false, CanApproveDenyRequest = false, CanDeleteCustomers = false, CanHideReviews = false, CanOrder = true, CanOrderNewStock = false, CanSetResellPrice = false, CanViewCustomers = false, CanViewOrders = false}
+                new Permissions { CanAlterCustomers = false, CanAlterStaff = false, CanApproveDenyRequest = false, CanDeleteCustomers = false, CanHideReviews = false, CanOrder = true, CanOrderNewStock = false, CanSetResellPrice = false, CanViewCustomers = false, CanViewOrders = false},
+                new Permissions { CanAlterCustomers = false, CanAlterStaff = false, CanApproveDenyRequest = false, CanDeleteCustomers = false, CanHideReviews = false, CanOrder = false, CanOrderNewStock = false, CanSetResellPrice = false, CanViewCustomers = false, CanViewOrders = false}
             };
             permissions.ForEach(p => context.Permissions.Add(p));
 
@@ -120,20 +121,20 @@ namespace StaffApp.Data
 
             var userAccounts = new List<UserAccount>
             {
-                new UserAccount{ Forename = "Thorin", Surname = "Oakenshield", Email = "thorin.oakenshield@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Fili", Surname = "Oakenshield", Email = "fili.oakenshield@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Kili", Surname = "Oakenshield", Email = "kili.oakenshield@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Balin", Surname = "Son of Fundin", Email = "balin.Fundin@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Dwalin", Surname = "Son of Fundin", Email = "dwalin.Fundin@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Oin", Surname = "Son of Groin", Email = "oin.groin@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Dori", Surname = "Kingsman of Durin", Email = "dori.durin@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Nori", Surname = "Kingsman of Durin", Email = "nori.durin@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Bifur", Surname = "Dwarf of Khazad-dum", Email = "bifur.Khazad-dum@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Gloin", Surname = "Son of Groin", Email = "gloin.groin@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Bofur", Surname = "Dwarf of Khazad-dum", Email = "bofur.Khazad-dum@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Bombur", Surname = "Dwarf of Khazad-dum", Email = "bombur.Khazad-dum@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Ori", Surname = "Kingsman of Durin", Email = "ori.durin@erebor.me", Permission = permissions [8]},
-                new UserAccount{ Forename = "Bilbo", Surname = "Baggins", Email = "bilbo.baggins@theshire.me", Permission = permissions [8]}
+                new UserAccount{ Forename = "Thorin", Surname = "Oakenshield", Email = "thorin.oakenshield@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Fili", Surname = "Oakenshield", Email = "fili.oakenshield@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Kili", Surname = "Oakenshield", Email = "kili.oakenshield@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Balin", Surname = "Son of Fundin", Email = "balin.Fundin@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Dwalin", Surname = "Son of Fundin", Email = "dwalin.Fundin@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Oin", Surname = "Son of Groin", Email = "oin.groin@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Dori", Surname = "Kingsman of Durin", Email = "dori.durin@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Nori", Surname = "Kingsman of Durin", Email = "nori.durin@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Bifur", Surname = "Dwarf of Khazad-dum", Email = "bifur.Khazad-dum@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Gloin", Surname = "Son of Groin", Email = "gloin.groin@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Bofur", Surname = "Dwarf of Khazad-dum", Email = "bofur.Khazad-dum@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Bombur", Surname = "Dwarf of Khazad-dum", Email = "bombur.Khazad-dum@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Ori", Surname = "Kingsman of Durin", Email = "ori.durin@erebor.me", Permission = permissions [8], Active = true},
+                new UserAccount{ Forename = "Bilbo", Surname = "Baggins", Email = "bilbo.baggins@theshire.me", Permission = permissions [8], Active = true}
             };
             userAccounts.ForEach(u => context.UserAccounts.Add(u));
 

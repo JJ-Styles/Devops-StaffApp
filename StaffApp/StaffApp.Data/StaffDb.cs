@@ -80,6 +80,7 @@ namespace StaffApp.Data
                 x.Property(u => u.Email).IsRequired();
                 x.Property(u => u.Surname).IsRequired();
                 x.Property(u => u.Forename).IsRequired();
+                x.Property(u => u.Active).IsRequired();
                 x.HasOne(u => u.Permission).WithMany()
                                            .HasForeignKey(u => u.PermissionsId)
                                            .IsRequired();

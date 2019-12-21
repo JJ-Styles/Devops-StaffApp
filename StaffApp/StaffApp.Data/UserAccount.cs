@@ -11,6 +11,7 @@ namespace StaffApp.Data
         public string Forename { get; set; }
         public string Email { get; set;}
         public int PermissionsId { get; set;}
+        public bool Active { get; set; }
         public Permissions Permission { get; set;}
     }
 }
