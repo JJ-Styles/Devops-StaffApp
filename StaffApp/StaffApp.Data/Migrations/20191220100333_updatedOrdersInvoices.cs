@@ -31,7 +31,7 @@ namespace StaffApp.Data.Migrations
             migrationBuilder.AddColumn<int>(
                 name: "StaffAccountId",
                 table: "Invoices",
-                nullable: false,
+                nullable: true,
                 defaultValue: 1);
 
             migrationBuilder.AddColumn<int>(
