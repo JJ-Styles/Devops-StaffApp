@@ -140,5 +140,22 @@ namespace StaffApp.Web.Controllers
         {
             return _context.UserAccounts.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> CustomerOrders(int id)
+        {
+            var orders = await _context.Orders
+                .Include(o => o.Products)
+                .Include(o => o.Invoices)
+                .ThenInclude(o => o.Staff)
+                .Where(o => o.Invoices.UserAccountId == id)
+                .ToListAsync();
+
+            if(orders.Count() == 0)
+            {
+                return View("NoOrders");
+            }
+
+            return View(orders);
+        }
     }
 }
