@@ -65,6 +65,7 @@ namespace StaffApp.Data
                 x.Property(p => p.Price).IsRequired();
                 x.Property(p => p.ProductName).IsRequired();
                 x.Property(p => p.Quantity).IsRequired();
+                x.Property(p => p.Confirmed).IsRequired();
             });
 
             modelBuilder.Entity<StaffAccount>(x =>

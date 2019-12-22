@@ -95,10 +95,10 @@ namespace StaffApp.Data
 
             var productRequests = new List<ProductRequest>
             {
-                new ProductRequest{ Price = 2.15, ProductName = "Real Pencil Stylus", Quantity = 8},
-                new ProductRequest{ Price = 6.15, ProductName = "Spray Paint Screen Protector", Quantity = 1},
-                new ProductRequest{ Price = 7.16, ProductName = "Non-conductive Screen Protector", Quantity = 6},
-                new ProductRequest{ Price = 5.04, ProductName = "Fish Scented Screen Protector", Quantity = 4}
+                new ProductRequest{ Price = 2.15, ProductName = "Real Pencil Stylus", Quantity = 8, Confirmed = false},
+                new ProductRequest{ Price = 6.15, ProductName = "Spray Paint Screen Protector", Quantity = 1, Confirmed = false},
+                new ProductRequest{ Price = 7.16, ProductName = "Non-conductive Screen Protector", Quantity = 6, Confirmed = false},
+                new ProductRequest{ Price = 5.04, ProductName = "Fish Scented Screen Protector", Quantity = 4, Confirmed = false}
             };
             productRequests.ForEach(p => context.ProductRequests.Add(p));
 

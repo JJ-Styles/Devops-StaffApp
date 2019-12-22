@@ -101,6 +101,9 @@ namespace StaffApp.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            //TODO: send updated Account to Accounts
+
             ViewData["PermissionsId"] = new SelectList(_context.Permissions, "Id", "Id", userAccount.PermissionsId);
             return View(userAccount);
         }
@@ -135,6 +138,8 @@ namespace StaffApp.Web.Controllers
             userAccount.Surname = "#######";
             userAccount.Email = "########";
             userAccount.Active = false;
+
+            //TODO: send updated Account to Accounts
 
             _context.UserAccounts.Update(userAccount);
             await _context.SaveChangesAsync();
@@ -230,6 +235,9 @@ namespace StaffApp.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            //TODO: send updated Review to Products
+
             ViewData["UserAccountId"] = new SelectList(_context.UserAccounts, "Id", "Id", review.UserAccountId);
             ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", review.ProductId);
             return View(review);
