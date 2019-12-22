@@ -140,6 +140,27 @@ namespace StaffApp.Data
 
             await context.SaveChangesAsync();
 
+            var reviews = new List<Reviews>
+            {
+                new Reviews {Rating = 3.2, Description = "Good Product but has flaws", Products = products[5], User = userAccounts[0], Hidden = false},
+                new Reviews {Rating = 4.7, Description = "Excellent Product but has flaws", Products = products[2], User = userAccounts[0], Hidden = false},
+                new Reviews {Rating = 0.4, Description = "Rubbish Product", Products = products[1], User = userAccounts[1], Hidden = false},
+                new Reviews {Rating = 5.0, Description = "Perfect Product", Products = products[2], User = userAccounts[2], Hidden = false},
+                new Reviews {Rating = 1.5, Description = "Poor Product", Products = products[3], User = userAccounts[3], Hidden = false},
+                new Reviews {Rating = 2.1, Description = "Adequate Product", Products = products[0], User = userAccounts[4], Hidden = false},
+                new Reviews {Rating = 3.4, Description = "Adequate Product", Products = products[4], User = userAccounts[5], Hidden = false},
+                new Reviews {Rating = 1.7, Description = "Poor Product", Products = products[3], User = userAccounts[6], Hidden = false},
+                new Reviews {Rating = 4.1, Description = "Excellent Product but has flaws", Products = products[6], User = userAccounts[7], Hidden = false},
+                new Reviews {Rating = 2.9, Description = "Adequate Product", Products = products[7], User = userAccounts[8], Hidden = false},
+                new Reviews {Rating = 0.5, Description = "Rubbish Product", Products = products[8], User = userAccounts[9], Hidden = false},
+                new Reviews {Rating = 1.4, Description = "Poor Product", Products = products[9], User = userAccounts[10], Hidden = false},
+                new Reviews {Rating = 2.6, Description = "Adequate Product", Products = products[10], User = userAccounts[11], Hidden = false},
+                new Reviews {Rating = 4.3, Description = "Excellent Product but has flaws", Products = products[11], User = userAccounts[12], Hidden = false},
+            };
+            reviews.ForEach(r => context.Reviews.Add(r));
+
+            await context.SaveChangesAsync();
+
             var invoices = new List<Invoice>
             {
                 new Invoice { Invoiced = false, Staff = staffAccounts[0], User = userAccounts[2]},

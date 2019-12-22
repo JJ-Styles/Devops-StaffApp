@@ -15,6 +15,7 @@ namespace StaffApp.Data
         public DbSet<StaffAccount> StaffAccounts { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set;}
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Reviews> Reviews { get; set; }
 
         public StaffDb(DbContextOptions<StaffDb> options) : base(options)
         {
@@ -84,6 +85,19 @@ namespace StaffApp.Data
                 x.HasOne(u => u.Permission).WithMany()
                                            .HasForeignKey(u => u.PermissionsId)
                                            .IsRequired();
+            });
+
+            modelBuilder.Entity<Reviews>(x =>
+            {
+                x.Property(r => r.Rating).IsRequired();
+                x.Property(r => r.Description).IsRequired();
+                x.Property(r => r.Hidden);
+                x.HasOne(r => r.Products).WithMany()
+                                         .HasForeignKey(r => r.ProductId)
+                                         .IsRequired();
+                x.HasOne(r => r.User).WithMany()
+                                     .HasForeignKey(r => r.UserAccountId)
+                                     .IsRequired();
             });
 
             modelBuilder.Entity<Invoice>(x =>

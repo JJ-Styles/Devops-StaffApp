@@ -13,6 +13,8 @@
     <Compile Remove="Migrations\20191220095037_updatedInvoicesMk2.Designer.cs" />
     <Compile Remove="Migrations\20191221143827_updatedOrders-addedDispatchDate.cs" />
     <Compile Remove="Migrations\20191221143827_updatedOrders-addedDispatchDate.Designer.cs" />
+    <Compile Remove="Migrations\20191222134302_addedReviews.cs" />
+    <Compile Remove="Migrations\20191222134302_addedReviews.Designer.cs" />
   </ItemGroup>
 
     <ItemGroup>
