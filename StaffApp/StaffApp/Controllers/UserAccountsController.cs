@@ -76,6 +76,11 @@ namespace StaffApp.Web.Controllers
                 return NotFound();
             }
 
+            if(userAccount.PermissionsId != 9 && userAccount.PermissionsId != 10)
+            {
+                return View("IncorrectPermission");
+            }
+
             if (ModelState.IsValid)
             {
                 try
