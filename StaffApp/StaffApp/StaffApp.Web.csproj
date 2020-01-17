@@ -27,4 +27,13 @@
     <ProjectReference Include="..\StaffApp.Data\StaffApp.Data.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="Services\Invoices\" />
+    <Folder Include="Services\Reviews\" />
+    <Folder Include="Services\Accounts\" />
+    <Folder Include="Services\ProductRequests\" />
+    <Folder Include="Services\Products\" />
+  </ItemGroup>
+
 </Project>
