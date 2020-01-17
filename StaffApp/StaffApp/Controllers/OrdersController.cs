@@ -5,17 +5,25 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using StaffApp.Data;
+using StaffApp.Web.Services;
 
 namespace StaffApp.Web.Controllers
 {
     public class OrdersController : Controller
     {
         private readonly StaffDb _context;
+        private readonly IOrdersService _ordersSevice;
+        private readonly ILogger _logger;
 
-        public OrdersController(StaffDb context)
+        public OrdersController(StaffDb context,
+                                IOrdersService ordersService,
+                                ILogger logger)
         {
             _context = context;
+            _ordersSevice = ordersService;
+            _logger = logger;
         }
 
         // GET: Orders
@@ -74,7 +82,7 @@ namespace StaffApp.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,Quantity,Cost,Dispatched,InvoiceId")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,Quantity,Cost,Dispatched,InvoiceId")] OrdersDTO order)
         {
             var invoice = await _context.Invoices.FirstOrDefaultAsync(i => i.Id == order.InvoiceId);
             if (id != order.Id)
@@ -109,11 +117,38 @@ namespace StaffApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            //TODO: send updated order to orders api
+            try
+            {
+                var savedOrder = await _ordersSevice.PushOrder(order);
+                if (savedOrder.Id != order.Id)
+                {
+                    throw new System.Exception("Orders do not match");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("Exception Occured using Orders Service " + e);
+                order = null;
+            }
 
             ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id", order.InvoiceId);
             ViewData["ProductId"] = new SelectList(_context.Products, "id", "Description", order.ProductId);
             return View(order);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddOrders([FromBody]ICollection<OrdersDTO> orders)
+        {
+
+            foreach (OrdersDTO order in orders)
+            {
+                if (!OrderExists(order.Id))
+                {
+                    await _context.AddAsync(order);
+                }
+            }
+
+            return Ok();
         }
 
         private bool OrderExists(int id)

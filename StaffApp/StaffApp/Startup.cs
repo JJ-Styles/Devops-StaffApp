@@ -12,17 +12,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StaffApp.Data;
+using StaffApp.Web.Services;
 
 namespace StaffApp
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration,
+                        IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment _env;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -38,6 +42,15 @@ namespace StaffApp
                 Configuration.GetConnectionString("StoreConnection")));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+            if (_env.IsDevelopment())
+            {
+                services.AddTransient<IOrdersService, FakeOrdersService>();
+            }
+            else
+            {
+                services.AddTransient<IOrdersService, OrdersService>();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
