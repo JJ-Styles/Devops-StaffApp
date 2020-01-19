@@ -7,5 +7,8 @@ namespace StaffApp.Web.Services.Reviews
 {
     interface IReviewsService
     {
+        Task<ReviewsDTO> PushReview(ReviewsDTO review);
+
+        Task<IEnumerable<ReviewsDTO>> GetReviews();
     }
 }

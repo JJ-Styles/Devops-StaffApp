@@ -7,5 +7,8 @@ namespace StaffApp.Web.Services.ProductRequests
 {
     interface IProductRequest
     {
+        Task<ProductRequestDTO> PushProductRequest(ProductRequestDTO productRequest);
+
+        Task<IEnumerable<ProductRequestDTO>> GetProductRequest();
     }
 }

@@ -7,5 +7,12 @@ namespace StaffApp.Web.Services.Accounts
 {
     interface IAccountsService
     {
+        Task<IEnumerable<UserAccountsDTO>> GetUserAccounts();
+
+        Task<IEnumerable<StaffAccountsDTO>> GetStaffAccounts();
+
+        Task<IEnumerable<PermissionsDTO>> GetPermissions();
+
+        Task<UserAccountsDTO> PostUserAccount(UserAccountsDTO user);
     }
 }

@@ -7,5 +7,8 @@ namespace StaffApp.Web.Services.Invoices
 {
     interface IInvoicesService
     {
+        Task<InvoicesDTO> PushInvoices(InvoicesDTO invoices);
+
+        Task<IEnumerable<InvoicesDTO>> GetInvoices();
     }
 }

@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace StaffApp.Web.Services
+namespace StaffApp.Web.Services.Orders
 {
     public class OrdersService : IOrdersService
     {
@@ -13,7 +13,7 @@ namespace StaffApp.Web.Services
 
         public OrdersService(HttpClient client)
         {
-            client.BaseAddress = new System.Uri("");
+            client.BaseAddress = new Uri("");
             client.Timeout = TimeSpan.FromSeconds(5);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             _client = client;

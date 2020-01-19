@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using StaffApp.Data;
 
-namespace StaffApp.Web.Services
+namespace StaffApp.Web.Services.Orders
 {
     public class OrdersDTO
     {
