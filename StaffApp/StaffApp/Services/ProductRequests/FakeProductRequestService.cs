@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.ProductRequests
 {
-    public class FakeProductRequestService : IProductRequest
+    public class FakeProductRequestService : IProductRequestsService
     {
         private readonly ProductRequestDTO[] _productRequests =
         {

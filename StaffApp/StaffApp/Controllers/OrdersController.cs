@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StaffApp.Data;
-using StaffApp.Web.Services;
+using StaffApp.Web.Services.Invoices;
+using StaffApp.Web.Services.Orders;
 
 namespace StaffApp.Web.Controllers
 {
@@ -16,13 +17,16 @@ namespace StaffApp.Web.Controllers
         private readonly StaffDb _context;
         private readonly IOrdersService _ordersSevice;
         private readonly ILogger _logger;
+        private readonly IInvoicesService _invoicesService;
 
         public OrdersController(StaffDb context,
                                 IOrdersService ordersService,
+                                IInvoicesService invoicesService,
                                 ILogger logger)
         {
             _context = context;
             _ordersSevice = ordersService;
+            _invoicesService = invoicesService;
             _logger = logger;
         }
 
@@ -192,7 +196,7 @@ namespace StaffApp.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditInvoice(int id, [Bind("Id, Invoiced, StaffAccountId, UserAccountId")] Invoice invoice)
+        public async Task<IActionResult> EditInvoice(int id, [Bind("Id, Invoiced, StaffAccountId, UserAccountId")] InvoicesDTO invoice)
         {
             if (id != invoice.Id)
             {
@@ -222,12 +226,38 @@ namespace StaffApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            //TODO: send updated invoice to invoice api
+            try
+            {
+                var savedInvoice = await _invoicesService.PushInvoices(invoice);
+                if (savedInvoice.Id != invoice.Id)
+                {
+                    throw new System.Exception("Orders do not match");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("Exception Occured using Invoices Service " + e);
+                invoice = null;
+            }
 
 
             return View(invoice);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddInvoice([FromBody]ICollection<InvoicesDTO> invoices)
+        {
+
+            foreach (InvoicesDTO invoice in invoices)
+            {
+                if (!OrderExists(invoice.Id))
+                {
+                    await _context.AddAsync(invoice);
+                }
+            }
+
+            return Ok();
+        }
         private bool InvoiceExists(int id)
         {
             return _context.Invoices.Any(e => e.Id == id);

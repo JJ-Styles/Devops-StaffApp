@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Accounts
 {
-    interface IAccountsService
+    public interface IAccountsService
     {
         Task<IEnumerable<UserAccountsDTO>> GetUserAccounts();
 

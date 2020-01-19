@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Reviews
 {
-    interface IReviewsService
+    public interface IReviewsService
     {
         Task<ReviewsDTO> PushReview(ReviewsDTO review);
 

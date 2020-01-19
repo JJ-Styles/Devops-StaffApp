@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Products
 {
-    interface IProductsService
+    public interface IProductsService
     {
         Task<PriceHistoriesDTO> PushPrice(PriceHistoriesDTO product);
 

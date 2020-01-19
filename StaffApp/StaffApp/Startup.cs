@@ -13,6 +13,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StaffApp.Data;
 using StaffApp.Web.Services;
+using StaffApp.Web.Services.Accounts;
+using StaffApp.Web.Services.Invoices;
+using StaffApp.Web.Services.Orders;
+using StaffApp.Web.Services.ProductRequests;
+using StaffApp.Web.Services.Products;
+using StaffApp.Web.Services.Reviews;
 
 namespace StaffApp
 {
@@ -46,10 +52,20 @@ namespace StaffApp
             if (_env.IsDevelopment())
             {
                 services.AddTransient<IOrdersService, FakeOrdersService>();
+                services.AddTransient<IInvoicesService, FakeInvoicesService>();
+                services.AddTransient<IAccountsService, FakeAccountsService>();
+                services.AddTransient<IProductRequestsService, FakeProductRequestService>();
+                services.AddTransient<IProductsService, FakeProductsService>();
+                services.AddTransient<IReviewsService, FakeReviewsService>();
             }
             else
             {
                 services.AddTransient<IOrdersService, OrdersService>();
+                services.AddTransient<IInvoicesService, InvoicesService>();
+                services.AddTransient<IAccountsService, AccountsService>();
+                services.AddTransient<IProductRequestsService, ProductRequestService>();
+                services.AddTransient<IProductsService, ProductsService>();
+                services.AddTransient<IReviewsService, ReviewsService>();
             }
         }
 

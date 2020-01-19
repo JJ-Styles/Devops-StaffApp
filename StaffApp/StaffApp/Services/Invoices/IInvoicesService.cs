@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Invoices
 {
-    interface IInvoicesService
+    public interface IInvoicesService
     {
         Task<InvoicesDTO> PushInvoices(InvoicesDTO invoices);
 

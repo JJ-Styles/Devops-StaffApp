@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.ProductRequests
 {
-    interface IProductRequest
+    public interface IProductRequestsService
     {
         Task<ProductRequestDTO> PushProductRequest(ProductRequestDTO productRequest);
 

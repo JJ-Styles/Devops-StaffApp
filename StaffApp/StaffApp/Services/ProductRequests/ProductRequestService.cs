@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.ProductRequests
 {
-    public class ProductRequestService : IProductRequest
+    public class ProductRequestService : IProductRequestsService
     {
         private readonly HttpClient _client;
 

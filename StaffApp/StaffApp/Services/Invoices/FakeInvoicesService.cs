@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Invoices
 {
-    public class FakeInvoicesServic : IInvoicesService
+    public class FakeInvoicesService : IInvoicesService
     {
         private readonly InvoicesDTO[] _invoices =
         {
