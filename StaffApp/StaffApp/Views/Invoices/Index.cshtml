@@ -1,0 +1,50 @@
+﻿@model IEnumerable<StaffApp.Data.Invoice>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Invoice Number
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Invoiced)
+            </th>
+            <th>
+                Users Email
+            </th>
+            <th>
+                Staff Member
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelitem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem => item.Invoiced)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem => item.User.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem => item.Staff.Surname)
+                    @Html.DisplayFor(modelitem => item.Staff.Forename)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">View</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

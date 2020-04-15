@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Invoices
 {
-    public class InvoicesDTO
+    public class InvoicesDTO : ServicesDTO
     {
         public int Id { get; set; }
         public bool Invoiced { get; set; }

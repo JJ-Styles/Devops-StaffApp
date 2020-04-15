@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Reviews
 {
-    public class ReviewsDTO
+    public class ReviewsDTO : ServicesDTO
     {
         public int Id { get; set; }
         public double Rating { get; set; }

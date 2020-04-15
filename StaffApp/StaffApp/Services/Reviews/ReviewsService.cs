@@ -7,21 +7,19 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Reviews
 {
-    public class ReviewsService : IReviewsService
+    public class ReviewsService : StaffAppServices, IReviewsService
     {
-        private readonly HttpClient _client;
-
-        public ReviewsService(HttpClient client)
+        public ReviewsService(IHttpClientFactory clientFactory) : base(clientFactory, "")
         {
-            client.BaseAddress = new Uri("");
-            client.Timeout = TimeSpan.FromSeconds(5);
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            _client = client;
+        }
+
+        public ReviewsService() : base()
+        {
         }
 
         public async Task<IEnumerable<ReviewsDTO>> GetReviews()
         {
-            var response = await _client.GetAsync("api/reviews/");
+            var response = await GetClient().GetAsync("api/reviews/");
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 return null;
@@ -31,13 +29,20 @@ namespace StaffApp.Web.Services.Reviews
             return reviews;
         }
 
-        public async Task<ReviewsDTO> PushReview(ReviewsDTO review)
+        public async Task<HttpResponseMessage> PushReview(ReviewsDTO review)
         {
-            var response = await _client.PostAsJsonAsync(
-                "api/review/", review);
-            response.EnsureSuccessStatusCode();
+            return await GetClient().PostAsJsonAsync("api/review/", review);
+        }
 
-            return review;
+        public override async Task<HttpResponseMessage> Post<T>(T data)
+        {
+            var Reviews = new ReviewsDTO();
+            if (!ReviewsDTO.ReferenceEquals(data.GetType(), Reviews))
+            {
+                return null;
+            }
+            Reviews = (ReviewsDTO)nameof(data).Clone();
+            return await PushReview(Reviews);
         }
     }
 }

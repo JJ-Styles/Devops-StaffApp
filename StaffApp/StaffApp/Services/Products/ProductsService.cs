@@ -7,33 +7,19 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Products
 {
-    public class ProductsService : IProductsService
+    public class ProductsService : StaffAppServices, IProductsService
     {
-        private readonly HttpClient _client;
-
-        public ProductsService(HttpClient client)
+        public ProductsService(IHttpClientFactory clientFactory) : base(clientFactory, "")
         {
-            client.BaseAddress = new Uri("");
-            client.Timeout = TimeSpan.FromSeconds(5);
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            _client = client;
         }
 
-        public async Task<IEnumerable<ProductsDTO>> GetProducts()
+        public ProductsService() : base()
         {
-            var response = await _client.GetAsync("api/products/");
-            if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                return null;
-            }
-            response.EnsureSuccessStatusCode();
-            IEnumerable<ProductsDTO> products = await response.Content.ReadAsAsync<IEnumerable<ProductsDTO>>();
-            return products;
         }
 
         public async Task<IEnumerable<PriceHistoriesDTO>> GetPriceHistories()
         {
-            var response = await _client.GetAsync("api/products/pricehostories/");
+            var response = await GetClient().GetAsync("api/products/pricehostories/");
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 return null;
@@ -43,13 +29,20 @@ namespace StaffApp.Web.Services.Products
             return priceHistories;
         }
 
-        public async Task<PriceHistoriesDTO> PushPrice(PriceHistoriesDTO priceHistories)
+        public async Task<HttpResponseMessage> PushPrice(PriceHistoriesDTO priceHistories)
         {
-            var response = await _client.PostAsJsonAsync(
-                "api/product/", priceHistories);
-            response.EnsureSuccessStatusCode();
+            return await GetClient().PostAsJsonAsync("api/product/", priceHistories);
+        }
 
-            return priceHistories;
+        public override async Task<HttpResponseMessage> Post<T>(T data)
+        {
+            var price = new PriceHistoriesDTO();
+            if (!ProductsDTO.ReferenceEquals(data.GetType(), price))
+            {
+                return null;
+            }
+            price = (PriceHistoriesDTO)nameof(data).Clone();
+            return await PushPrice(price);
         }
     }
 }

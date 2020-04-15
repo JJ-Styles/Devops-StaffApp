@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Reviews
@@ -20,9 +22,9 @@ namespace StaffApp.Web.Services.Reviews
             return Task.FromResult(reviews);
         }
 
-        public Task<ReviewsDTO> PushReview(ReviewsDTO review)
+        public Task<HttpResponseMessage> PushReview(ReviewsDTO review)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
         }
     }
 }

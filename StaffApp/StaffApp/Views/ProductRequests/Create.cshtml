@@ -1,4 +1,4 @@
-﻿@model StaffApp.Web.Models.ProductRequestViewModel
+﻿@model IEnumerable<StaffApp.Web.Services.ProductRequests.ProductRequestProductsDTO>
 
 @{
     ViewData["Title"] = "Create";
@@ -13,13 +13,13 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ProductName" class="control-label"></label>
-                @Html.DropDownListFor(x => x.ProductName, new SelectList(Model.Product, "Name", "Name"))
+                <label asp-for="@Model.First().Name" class="control-label"></label>
+                @Html.DropDownListFor(x => x.First().Name, new SelectList(Model, "Name", "Name"))
             </div>
             <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
+                <label asp-for="@Model.First().Quantity" class="control-label"></label>
+                <input asp-for="@Model.First().Quantity" class="form-control" />
+                <span asp-validation-for="@Model.First().Quantity" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

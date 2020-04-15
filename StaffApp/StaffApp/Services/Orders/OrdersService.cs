@@ -7,37 +7,30 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Orders
 {
-    public class OrdersService : IOrdersService
+    public class OrdersService : StaffAppServices, IOrdersService
     {
-        private readonly HttpClient _client;
-
-        public OrdersService(HttpClient client)
+        public OrdersService(IHttpClientFactory clientFactory) : base(clientFactory, "")
         {
-            client.BaseAddress = new Uri("");
-            client.Timeout = TimeSpan.FromSeconds(5);
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            _client = client;
         }
 
-        public async Task<IEnumerable<OrdersDTO>> GetOrders()
+        public OrdersService() : base()
         {
-            var response = await _client.GetAsync("api/orders/");
-            if (response.StatusCode == HttpStatusCode.NotFound)
+        }
+
+        public async Task<HttpResponseMessage> PushOrder(OrdersDTO order)
+        {
+            return await GetClient().PostAsJsonAsync("api/orders/", order);
+        }
+
+        public override async Task<HttpResponseMessage> Post<T>(T data)
+        {
+            var Orders = new OrdersDTO();
+            if (!OrdersDTO.ReferenceEquals(data.GetType(), Orders))
             {
                 return null;
             }
-            response.EnsureSuccessStatusCode();
-            IEnumerable<OrdersDTO> orders = await response.Content.ReadAsAsync<IEnumerable<OrdersDTO>>();
-            return orders;
-        }
-
-        public async Task<OrdersDTO> PushOrder(OrdersDTO order)
-        {
-            var response = await _client.PostAsJsonAsync(
-                "api/orders/", order);
-            response.EnsureSuccessStatusCode();
-
-            return order;
+            Orders = (OrdersDTO)nameof(data).Clone();
+            return await PushOrder(Orders);
         }
     }
 }

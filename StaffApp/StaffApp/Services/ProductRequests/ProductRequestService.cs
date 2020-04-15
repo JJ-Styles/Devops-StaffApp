@@ -7,37 +7,42 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.ProductRequests
 {
-    public class ProductRequestService : IProductRequestsService
+    public class ProductRequestService : StaffAppServices, IProductRequestsService
     {
-        private readonly HttpClient _client;
-
-        public ProductRequestService(HttpClient client)
+        public ProductRequestService(IHttpClientFactory clientFactory) : base(clientFactory, "")
         {
-            client.BaseAddress = new Uri("");
-            client.Timeout = TimeSpan.FromSeconds(5);
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            _client = client;
         }
 
-        public async Task<IEnumerable<ProductRequestDTO>> GetProductRequest()
+        public ProductRequestService() : base()
         {
-            var response = await _client.GetAsync("api/productrequests/");
+        }
+
+        public async Task<IEnumerable<ProductRequestProductsDTO>> GetProductRequestProducts()
+        {
+            var response = await GetClient().GetAsync("api/productRequest/products");
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 return null;
             }
             response.EnsureSuccessStatusCode();
-            IEnumerable<ProductRequestDTO> productRequests = await response.Content.ReadAsAsync<IEnumerable<ProductRequestDTO>>();
-            return productRequests;
+            IEnumerable<ProductRequestProductsDTO> products = await response.Content.ReadAsAsync<IEnumerable<ProductRequestProductsDTO>>();
+            return products;
         }
 
-        public async Task<ProductRequestDTO> PushProductRequest(ProductRequestDTO productRequest)
+        public async Task<HttpResponseMessage> PushProductRequest(ProductRequestDTO productRequest)
         {
-            var response = await _client.PostAsJsonAsync(
-                "api/productrequest/", productRequest);
-            response.EnsureSuccessStatusCode();
+            return await GetClient().PostAsJsonAsync("api/productrequest/", productRequest);
+        }
 
-            return productRequest;
+        public override async Task<HttpResponseMessage> Post<T>(T data)
+        {
+            var ProductRequest = new ProductRequestDTO();
+            if (!ProductRequestDTO.ReferenceEquals(data.GetType(), ProductRequest))
+            {
+                return null;
+            }
+            ProductRequest = (ProductRequestDTO)nameof(data).Clone();
+            return await PushProductRequest(ProductRequest);
         }
     }
 }

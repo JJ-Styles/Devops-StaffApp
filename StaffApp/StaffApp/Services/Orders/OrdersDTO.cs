@@ -6,7 +6,7 @@ using StaffApp.Data;
 
 namespace StaffApp.Web.Services.Orders
 {
-    public class OrdersDTO
+    public class OrdersDTO : ServicesDTO
     {
         public int Id { get; set; }
         public int ProductId { get; set; }

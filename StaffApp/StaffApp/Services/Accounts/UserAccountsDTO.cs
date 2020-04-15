@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Accounts
 {
-    public class UserAccountsDTO
+    public class UserAccountsDTO : ServicesDTO
     {
         public int Id { get; set; }
         public string Surname { get; set; }

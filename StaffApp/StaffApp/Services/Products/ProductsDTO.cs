@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Products
 {
-    public class ProductsDTO
+    public class ProductsDTO : ServicesDTO
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int StockLevel { get; set; }

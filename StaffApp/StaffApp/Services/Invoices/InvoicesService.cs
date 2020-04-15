@@ -7,37 +7,31 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Invoices
 {
-    public class InvoicesService : IInvoicesService
+    public class InvoicesService : StaffAppServices, IInvoicesService
     {
-        private readonly HttpClient _client;
 
-        public InvoicesService(HttpClient client)
+        public InvoicesService(IHttpClientFactory clientFactory) : base(clientFactory, "")
         {
-            client.BaseAddress = new Uri("");
-            client.Timeout = TimeSpan.FromSeconds(5);
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            _client = client;
         }
 
-        public async Task<IEnumerable<InvoicesDTO>> GetInvoices()
+        public InvoicesService() : base()
         {
-            var response = await _client.GetAsync("api/invoices/");
-            if (response.StatusCode == HttpStatusCode.NotFound)
+        }
+
+        public async Task<HttpResponseMessage> PushInvoices(InvoicesDTO invoices)
+        {
+            return await GetClient().PostAsJsonAsync("api/invoices/", invoices);
+        }
+
+        public override async Task<HttpResponseMessage> Post<T>(T data)
+        {
+            var invoices = new InvoicesDTO();
+            if (!InvoicesDTO.ReferenceEquals(data.GetType(), invoices))
             {
                 return null;
             }
-            response.EnsureSuccessStatusCode();
-            IEnumerable<InvoicesDTO> invoices = await response.Content.ReadAsAsync<IEnumerable<InvoicesDTO>>();
-            return invoices;
-        }
-
-        public async Task<InvoicesDTO> PushInvoices(InvoicesDTO invoices)
-        {
-            var response = await _client.PostAsJsonAsync(
-                "api/invoices/", invoices);
-            response.EnsureSuccessStatusCode();
-
-            return invoices;
+            invoices = (InvoicesDTO)nameof(data).Clone();
+            return await PushInvoices(invoices);
         }
     }
 }

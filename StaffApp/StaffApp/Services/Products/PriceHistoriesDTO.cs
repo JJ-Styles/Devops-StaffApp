@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StaffApp.Web.Services.Products
 {
-    public class PriceHistoriesDTO
+    public class PriceHistoriesDTO : ServicesDTO
     {
         public int Id { get; set; }
         public DateTime EffectiveFrom { get; set; }

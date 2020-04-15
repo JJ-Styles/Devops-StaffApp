@@ -54,8 +54,8 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="ViewInvoice" asp-route-invoiceId="@item.InvoiceId">View Invoice</a> |
-                <a asp-action="EditInvoice" asp-route-invoiceId="@item.InvoiceId">Edit Invoice</a> 
+                <a asp-controller="Invoices" asp-action="Details" asp-route-id="@item.InvoiceId">View Invoice</a> |
+                <a asp-controller="Invoices" asp-action="Edit" asp-route-id="@item.InvoiceId">Edit Invoice</a> 
             </td>
         </tr>
 }
