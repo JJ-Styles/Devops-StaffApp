@@ -7,16 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StaffApp.Data;
 using StaffApp.Web.Models;
+using StaffApp.Web.Services.ProductRequests;
 
 namespace StaffApp.Web.Controllers
 {
     public class ProductRequestsController : Controller
     {
         private readonly StaffDb _context;
+        private readonly IProductRequestsService _productRequestsService;
+        //private readonly ILogger _logger;
 
-        public ProductRequestsController(StaffDb context)
+        public ProductRequestsController(StaffDb context,
+                                         //ILogger logger,
+                                         IProductRequestsService productRequestsService)
         {
             _context = context;
+            _productRequestsService = productRequestsService;
+            //_logger = logger;
         }
 
         // GET: ProductRequests
@@ -46,28 +53,8 @@ namespace StaffApp.Web.Controllers
         // GET: ProductRequests/Create
         public IActionResult Create()
         {
-            var product = new List<ProductFromRequest> 
-            { 
-                new ProductFromRequest {Name = "Wrap It and Hope Cover", Price = 2.25},
-                new ProductFromRequest {Name = "Non-conductive Screen Protector", Price = 5.00},
-                new ProductFromRequest {Name = "Fish Scented Screen Protector", Price = 5.48},
-                new ProductFromRequest {Name = "Rippled Screen Protector", Price = 15.48},
-                new ProductFromRequest {Name = "Spray Paint Screen Protector", Price = 8.95},
-                new ProductFromRequest {Name = "Real Pencil Stylus", Price = 10.53},
-                new ProductFromRequest {Name = "Sticky Tape Sport Armband", Price = 15.40},
-                new ProductFromRequest {Name = "Smartphone Car Holder", Price = 1.95},
-                new ProductFromRequest {Name = "Water Bath Case", Price = 6.84},
-                new ProductFromRequest {Name = "Harden Sponge Case", Price = 20.55},
-                new ProductFromRequest {Name = "Cloth Cover", Price = 2.22},
-                new ProductFromRequest {Name = "Chocolate Cover", Price = 3.45}   
-            }; //populate by getting the products from the 3rd party suppliers through product request api
-
-            var productRequest = new ProductRequestViewModel
-            {
-                Product = product
-            };
-
-            return View(productRequest);
+            var product = _productRequestsService.GetProductRequestProducts(); //populate by getting the products from the 3rd party suppliers through product request api
+            return View(product.Result);
         }
 
         // POST: ProductRequests/Create
@@ -75,42 +62,42 @@ namespace StaffApp.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductName,Quantity")] ProductRequestViewModel productRequest)
+        public async Task<IActionResult> Create([Bind("Id,Name,Quantity")] ProductRequestProductsDTO productRequest)
         {
-            var product = new List<ProductFromRequest>
-            {
-                new ProductFromRequest {Name = "Wrap It and Hope Cover", Price = 2.25},
-                new ProductFromRequest {Name = "Non-conductive Screen Protector", Price = 5.00},
-                new ProductFromRequest {Name = "Fish Scented Screen Protector", Price = 5.48},
-                new ProductFromRequest {Name = "Rippled Screen Protector", Price = 15.48},
-                new ProductFromRequest {Name = "Spray Paint Screen Protector", Price = 8.95},
-                new ProductFromRequest {Name = "Real Pencil Stylus", Price = 10.53},
-                new ProductFromRequest {Name = "Sticky Tape Sport Armband", Price = 15.40},
-                new ProductFromRequest {Name = "Smartphone Car Holder", Price = 1.95},
-                new ProductFromRequest {Name = "Water Bath Case", Price = 6.84},
-                new ProductFromRequest {Name = "Harden Sponge Case", Price = 20.55},
-                new ProductFromRequest {Name = "Cloth Cover", Price = 2.22},
-                new ProductFromRequest {Name = "Chocolate Cover", Price = 3.45}
-            }; //Pull data from api again
+            var product = _productRequestsService.GetProductRequestProducts();//Pull data from api again
 
             ProductRequest request = new ProductRequest
             {
                 Confirmed = false,
                 Quantity = productRequest.Quantity,
-                ProductName = productRequest.ProductName,
-                Price = product.FirstOrDefault(p => p.Name == productRequest.ProductName).Price
+                ProductName = productRequest.Name,
+                Price = product.Result.First(p => p.Name == productRequest.Name).Price
+            };
+
+            ProductRequestDTO requestAPI = new ProductRequestDTO
+            {
+                Confirmed = false,
+                Quantity = productRequest.Quantity,
+                ProductName = productRequest.Name,
+                Price = product.Result.First(p => p.Name == productRequest.Name).Price
             };
 
             if (ModelState.IsValid)
             {
                 _context.Add(request);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
 
-            //TODO: send new request to Product Request Api
+            try
+            {
+                var response = _productRequestsService.PushProductRequest(requestAPI);
+            }
+            catch (Exception e)
+            {
+                //_logger.LogWarning(e);
+            }
 
-            return View(request);
+            return RedirectToAction(nameof(Index));
         }
 
         private bool ProductRequestExists(int id)

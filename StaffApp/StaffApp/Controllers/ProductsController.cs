@@ -7,16 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StaffApp.Data;
+using StaffApp.Web.Services.Products;
 
 namespace StaffApp.Web.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly StaffDb _context;
+        private readonly IProductsService _productsService;
+        //private readonly ILogger _logger;
 
-        public ProductsController(StaffDb context)
+        public ProductsController(StaffDb context,
+                                  //ILogger logger,
+                                  IProductsService productsService)
         {
             _context = context;
+            _productsService = productsService;
+            //_logger = logger;
         }
 
         // GET: Products
@@ -96,7 +103,20 @@ namespace StaffApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            //TODO: send new price to products
+            PriceHistoriesDTO priceHistories = new PriceHistoriesDTO
+            {
+                Id = newPrice.Id,
+                Price = newPrice.Price,
+            };
+
+            try
+            {
+                var response = await _productsService.PushPrice(priceHistories);
+            }
+            catch(Exception e)
+            {
+                //_logger.LogWarning(e);
+            }
 
             return View(newPrice);
         }

@@ -6,16 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StaffApp.Data;
+using StaffApp.Web.Services.Accounts;
 
 namespace StaffApp.Web.Controllers
 {
     public class UserAccountsController : Controller
     {
         private readonly StaffDb _context;
+        private readonly IAccountsService _accounts;
+        //private readonly ILogger _logger;
 
-        public UserAccountsController(StaffDb context)
+        public UserAccountsController(StaffDb context,
+                                      //ILogger logger,
+                                      IAccountsService accounts)
         {
             _context = context;
+            _accounts = accounts;
+            //_logger = logger;
         }
 
         // GET: UserAccounts
@@ -99,13 +106,29 @@ namespace StaffApp.Web.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
 
-            //TODO: send updated Account to Accounts
+            UserAccountsDTO user = new UserAccountsDTO
+            {
+                Id = userAccount.Id,
+                Active = userAccount.Active,
+                Email = userAccount.Email,
+                Forename = userAccount.Forename,
+                Surname = userAccount.Surname,
+                PermissionsId = userAccount.PermissionsId
+            };
+
+            try
+            {
+                var response = _accounts.PostUserAccount(user);
+            }
+            catch(Exception e)
+            {
+                //_logger.LogWarning(e);
+            }
 
             ViewData["PermissionsId"] = new SelectList(_context.Permissions, "Id", "Id", userAccount.PermissionsId);
-            return View(userAccount);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: UserAccounts/Delete/5
@@ -139,7 +162,22 @@ namespace StaffApp.Web.Controllers
             userAccount.Email = "########";
             userAccount.Active = false;
 
-            //TODO: send updated Account to Accounts
+            UserAccountsDTO user = new UserAccountsDTO
+            {
+                Forename = userAccount.Forename,
+                Surname = userAccount.Surname,
+                Email = userAccount.Email,
+                Active = userAccount.Active
+            };
+
+            try
+            {
+                var response = _accounts.PostUserAccount(user);
+            }
+            catch (Exception e)
+            {
+                //_logger.LogWarning(e);
+            }
 
             _context.UserAccounts.Update(userAccount);
             await _context.SaveChangesAsync();
@@ -167,80 +205,6 @@ namespace StaffApp.Web.Controllers
             }
 
             return View(orders);
-        }
-
-        // GET: UserAccounts/CustomerReviews/5
-        public async Task<IActionResult> CustomerReviews(int id)
-        {
-            var reviews = await _context.Reviews
-                .Include(r => r.Products)
-                .Where(r => r.UserAccountId == id)
-                .ToListAsync();
-
-            if(reviews.Count() == 0)
-            {
-                return View("NoReviews");
-            }
-
-            return View(reviews);
-        }
-
-        // GET: UserAccounts/EditReview/5
-        public async Task<IActionResult> EditReview(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var review = await _context.Reviews.FindAsync(id);
-            if (review == null)
-            {
-                return NotFound();
-            }
-            ViewData["UserAccountId"] = new SelectList(_context.UserAccounts, "Id", "Id", review.UserAccountId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", review.ProductId);
-            return View(review);
-        }
-
-        // POST: UserAccounts/EditReview/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditReview(int id, [Bind("Id,Rating,Description,Hidden,ProductId,UserAccountId")] Reviews review)
-        {
-            if (id != review.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(review);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserAccountExists(review.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-
-            //TODO: send updated Review to Products
-
-            ViewData["UserAccountId"] = new SelectList(_context.UserAccounts, "Id", "Id", review.UserAccountId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", review.ProductId);
-            return View(review);
         }
     }
 }

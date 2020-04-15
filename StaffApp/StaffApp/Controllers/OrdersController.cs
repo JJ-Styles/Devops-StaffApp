@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StaffApp.Data;
-using StaffApp.Web.Services.Invoices;
 using StaffApp.Web.Services.Orders;
 
 namespace StaffApp.Web.Controllers
@@ -16,18 +15,16 @@ namespace StaffApp.Web.Controllers
     {
         private readonly StaffDb _context;
         private readonly IOrdersService _ordersSevice;
-        private readonly ILogger _logger;
-        private readonly IInvoicesService _invoicesService;
+        //private readonly ILogger _logger;
 
         public OrdersController(StaffDb context,
-                                IOrdersService ordersService,
-                                IInvoicesService invoicesService,
-                                ILogger logger)
+                                IOrdersService ordersService
+                                //,ILogger logger
+            )
         {
             _context = context;
             _ordersSevice = ordersService;
-            _invoicesService = invoicesService;
-            _logger = logger;
+            //_logger = logger;
         }
 
         // GET: Orders
@@ -86,7 +83,7 @@ namespace StaffApp.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,Quantity,Cost,Dispatched,InvoiceId")] OrdersDTO order)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,Quantity,Cost,Dispatched,InvoiceId")] Order order)
         {
             var invoice = await _context.Invoices.FirstOrDefaultAsync(i => i.Id == order.InvoiceId);
             if (id != order.Id)
@@ -118,149 +115,36 @@ namespace StaffApp.Web.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
+
+            OrdersDTO orders = new OrdersDTO
+            {
+                 Id = order.Id,
+                 Cost = order.Cost,
+                 DispatchDate = order.DispatchDate,
+                 Dispatched = order.Dispatched,
+                 InvoiceId = order.InvoiceId,
+                 ProductId = order.ProductId,
+                 Quantity = order.Quantity
+            };
 
             try
             {
-                var savedOrder = await _ordersSevice.PushOrder(order);
-                if (savedOrder.Id != order.Id)
-                {
-                    throw new System.Exception("Orders do not match");
-                }
+                var response = await _ordersSevice.PushOrder(orders);
             }
             catch (Exception e)
             {
-                _logger.LogWarning("Exception Occured using Orders Service " + e);
-                order = null;
+                //_logger.LogWarning(e);
             }
 
             ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id", order.InvoiceId);
             ViewData["ProductId"] = new SelectList(_context.Products, "id", "Description", order.ProductId);
-            return View(order);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddOrders([FromBody]ICollection<OrdersDTO> orders)
-        {
-
-            foreach (OrdersDTO order in orders)
-            {
-                if (!OrderExists(order.Id))
-                {
-                    await _context.AddAsync(order);
-                }
-            }
-
-            return Ok();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool OrderExists(int id)
         {
             return _context.Orders.Any(e => e.Id == id);
-        }
-
-        // GET: Orders/ViewInvoice/5
-        public async Task<IActionResult> ViewInvoice(int? invoiceId)
-        {
-            if (invoiceId == null)
-            {
-                return NotFound();
-            }
-
-            var order = _context.Orders
-                .Include(o => o.Invoices)
-                .Include(o => o.Products)
-                .Include(o => o.Invoices.Staff)
-                .Include(o => o.Invoices.User)
-                .Where(m => m.InvoiceId == invoiceId);
-
-            return View(await order.ToListAsync());
-        }
-
-        // GET: Orders/EditInvoice/5
-        public async Task<IActionResult> EditInvoice(int? invoiceId)
-        {
-            if (invoiceId == null)
-            {
-                return NotFound();
-            }
-
-            var invoice = await _context.Invoices.FirstOrDefaultAsync(i => i.Id == invoiceId);
-
-            return View(invoice);
-        }
-
-        // POST: Orders/EditInvoice/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditInvoice(int id, [Bind("Id, Invoiced, StaffAccountId, UserAccountId")] InvoicesDTO invoice)
-        {
-            if (id != invoice.Id)
-            {
-                return NotFound();
-            }
-
-            //need to alter the staff account to whoever invoiced it
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(invoice);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InvoiceExists(invoice.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-
-            try
-            {
-                var savedInvoice = await _invoicesService.PushInvoices(invoice);
-                if (savedInvoice.Id != invoice.Id)
-                {
-                    throw new System.Exception("Orders do not match");
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning("Exception Occured using Invoices Service " + e);
-                invoice = null;
-            }
-
-
-            return View(invoice);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddInvoice([FromBody]ICollection<InvoicesDTO> invoices)
-        {
-
-            foreach (InvoicesDTO invoice in invoices)
-            {
-                if (!OrderExists(invoice.Id))
-                {
-                    await _context.AddAsync(invoice);
-                }
-            }
-
-            return Ok();
-        }
-        private bool InvoiceExists(int id)
-        {
-            return _context.Invoices.Any(e => e.Id == id);
         }
     }
 }
